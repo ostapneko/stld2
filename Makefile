@@ -16,7 +16,13 @@ SCRIPTS_VENDOR_DIR    = $(SCRIPTS_DIR)/vendor
 ANGULAR               = $(SCRIPTS_VENDOR_DIR)/angular.min.js
 
 
-all: $(BOOTSTRAP_CSS) $(ANGULAR) font_awesome scripts
+all: front_end back_end
+
+front_end: $(BOOTSTRAP_CSS) $(ANGULAR) font_awesome scripts
+
+back_end:
+	cabal sandbox init
+	cabal install --bindir=bin
 
 $(BOOTSTRAP_CSS): | $(STYLES_VENDOR_DIR)
 	wget 'http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css' -O $(BOOTSTRAP_CSS)
@@ -25,7 +31,7 @@ font_awesome:  $(FONT_AWESOME_FONT_DIR)/fontawesome-webfont.eot \
                $(FONT_AWESOME_FONT_DIR)/fontawesome-webfont.svg \
                $(FONT_AWESOME_FONT_DIR)/fontawesome-webfont.ttf \
                $(FONT_AWESOME_FONT_DIR)/fontawesome-webfont.woff \
-               $(FONT_AWESOME_CSS) \
+               $(FONT_AWESOME_CSS)
 
 $(FONT_AWESOME_FONT_DIR)/fontawesome-webfont.%: | $(FONT_AWESOME_TMP) $(FONT_AWESOME_FONT_DIR)
 	cp $(FONT_AWESOME_TMP)/fonts/$(notdir $@) $@
