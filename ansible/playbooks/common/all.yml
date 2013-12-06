@@ -1,0 +1,13 @@
+- hosts: all
+  sudo: yes
+  tasks:
+    - name: Create a ${stld_user} user
+      user: name=${stld_user} state=present shell=/bin/bash createhome=yes
+
+    - name: Copy stld Upstart conf file
+      template: src=files/stld.conf.j2
+                dest=/etc/init/stld.conf
+
+- include: filesystem/configure.yml
+
+- include: nginx/install.yml

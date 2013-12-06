@@ -1,0 +1,4 @@
+[submodule "ansible/dev-config"]
+	path = ansible/dev-config
+	url = git@github.com:ostapneko/dev-config.git
+	branch = master
