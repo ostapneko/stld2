@@ -1,0 +1,24 @@
+---
+- hosts: development
+  sudo: yes
+  sudo_user: ${stld_user}
+  tasks:
+  - name: Pull from git
+    git: repo=https://github.com/ostapneko/stld2
+         dest=/home/${stld_user}/apps/stld/workspace
+
+  - name: Link to current workspace
+    file: path=/home/${stld_user}/apps/stld/current state=link
+          src=/home/${stld_user}/apps/stld/workspace
+
+  - name: Install Coffeescript
+    sudo_user: root
+    apt: update_cache=yes pkg=coffeescript state=latest
+
+  - name: Build project
+    shell: make
+           chdir=/home/${stld_user}/apps/stld/current
+
+  - name: Start stld
+    sudo_user: root
+    shell: status stld | grep -q running || start stld

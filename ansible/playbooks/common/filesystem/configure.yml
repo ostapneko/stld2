@@ -1,0 +1,30 @@
+---
+- hosts: all
+  sudo_user: ${stld_user}
+  sudo: yes
+  tasks:
+  - name: Create a releases directory
+    file: path=/home/${stld_user}/apps/stld/releases
+          state=directory
+
+  - name: Create a shared config directory
+    file: path=/home/${stld_user}/apps/stld/shared/config
+          state=directory
+
+  - name: Create a shared pids directory
+    file: path=/home/${stld_user}/apps/stld/shared/pids
+          state=directory
+
+  - name: Create a log directory
+    sudo_user: root
+    file: path=/var/log/stld
+          state=directory
+          owner=${stld_user}
+          group=${stld_user}
+
+  - name: Create a stld directory
+    sudo_user: root
+    file: path=/var/stld
+          state=directory
+          owner=${stld_user}
+          group=${stld_user}

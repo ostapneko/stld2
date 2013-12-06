@@ -1,0 +1,9 @@
+---
+# all hosts
+- include: "playbooks/common/all.yml"
+
+# dev hosts
+- include: "dev-config/playbooks/common_tools/install.yml"
+- include: "dev-config/playbooks/bash/configure.yml"
+- include: "dev-config/playbooks/ghc/install.yml"
+- include: "playbooks/development/all.yml"
