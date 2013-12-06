@@ -11,3 +11,5 @@
 - include: filesystem/configure.yml
 
 - include: nginx/install.yml
+
+- include: postgres/setup.yml

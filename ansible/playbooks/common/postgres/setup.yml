@@ -1,0 +1,35 @@
+---
+- hosts: all
+  sudo: yes
+  tasks:
+  - name: Install PG and dependencies
+    apt: update_cache=yes pkg=$item state=latest
+    with_items:
+      - postgresql
+      - libpq-dev
+      - python-psycopg2
+
+  - name: Create a PG user
+    sudo_user: postgres
+    postgresql_user: user=${pg_user} password=${pg_password}
+
+  - name: Create the database
+    sudo_user: postgres
+    postgresql_db: db=${db_name}
+                   owner=${pg_user}
+                   encoding='UTF-8'
+                   template=template0
+                   lc_ctype='en_US.UTF-8'
+                   lc_collate='en_US.UTF-8'
+
+- hosts: development
+  sudo: yes
+  tasks:
+  - name: Create the test database
+    sudo_user: postgres
+    postgresql_db: db=stld-test
+                   owner=${pg_user}
+                   encoding='UTF-8'
+                   template=template0
+                   lc_ctype='en_US.UTF-8'
+                   lc_collate='en_US.UTF-8'

@@ -1,3 +1,6 @@
 dev_user: gratte
 stld_user: gratte
 hostname: www.example.com
+pg_user: pg_user
+pg_password: pg_password
+db_name: stld_db
