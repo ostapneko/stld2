@@ -16,9 +16,26 @@ executable stld
   main-is:             Main.hs
   ghc-options:         -Wall
   build-depends:       base >=4.6 && <4.7,
-                       aeson,
+                       aeson ==0.6.2.1,
                        mtl,
+                       persistent ==1.2.3.0,
+                       persistent-postgresql ==1.2.1,
+                       persistent-template ==1.2.0.6,
                        scotty ==0.6.0,
+                       text
+  hs-source-dirs:      src/main
+  default-language:    Haskell2010
+
+executable migrate
+  main-is:             Migrate.hs
+  ghc-options:         -Wall
+  build-depends:       base >=4.6 && <4.7,
+                       aeson ==0.6.2.1,
+                       bytestring,
+                       mtl,
+                       persistent ==1.2.3.0,
+                       persistent-postgresql ==1.2.1,
+                       persistent-template ==1.2.0.6,
                        text
   hs-source-dirs:      src/main
   default-language:    Haskell2010
