@@ -27,7 +27,7 @@
   tasks:
   - name: Create the test database
     sudo_user: postgres
-    postgresql_db: db=stld-test
+    postgresql_db: db=stld_test
                    owner=${pg_user}
                    encoding='UTF-8'
                    template=template0

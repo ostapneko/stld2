@@ -17,6 +17,7 @@ executable stld
   ghc-options:         -Wall
   build-depends:       base >=4.6 && <4.7,
                        aeson ==0.6.2.1,
+                       bytestring,
                        mtl,
                        persistent ==1.2.3.0,
                        persistent-postgresql ==1.2.1,

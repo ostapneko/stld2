@@ -7,4 +7,4 @@ respawn limit 10 5
 setuid {{ stld_user }}
 setgid {{ stld_user }}
 
-exec /home/{{ stld_user }}/apps/stld/current/bin/stld
+exec /home/{{ stld_user }}/apps/stld/current/bin/stld /home/{{ stld_user }}/apps/stld/current/config/database.json

@@ -1,4 +1,3 @@
-import qualified Data.ByteString.Lazy.Char8 as BSL
 import           Data.Aeson
 
 import System.Environment
@@ -20,13 +19,10 @@ main = do
 
 migrateDB :: String -> IO ()
 migrateDB file = do
-        content <- BSL.readFile file
-        case decode content of
-            Nothing   -> do
-                putStrLn $ "Error parsing db config"
-                exitFailure
-            Just conn -> do
-                let connStr = toConnectionString conn
+        eConnString <- loadConnectionString file
+        case eConnString of
+            Left err      -> putStrLn err >> exitFailure
+            Right connStr -> do
                 withPostgresqlConn connStr $ runSqlPersistM (runMigration migrateAll)
     where migrateAll = do
               migrateUniqueTasks

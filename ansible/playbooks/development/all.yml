@@ -11,6 +11,11 @@
     file: path=/home/${stld_user}/apps/stld/current state=link
           src=/home/${stld_user}/apps/stld/workspace
 
+  - name: Link database config file
+    file: dest=/home/${stld_user}/apps/stld/current/config/database.json
+          src=/home/${stld_user}/apps/stld/workspace/config/database.development.json
+          state=link
+
   - name: Install Coffeescript
     sudo_user: root
     apt: update_cache=yes pkg=coffeescript state=latest
