@@ -4,19 +4,22 @@ module Services.Task
     ( taskListResponse
     ) where
 
-import Responses.TaskList
+import           Database.PostgreSQL.Simple
 
-taskListResponse :: IO TaskListResponse
-taskListResponse = do
-    let uts = [ UniqueTask 1 "Buy tickets" True
-              , UniqueTask 2 "Buy rat food" False
-              ]
+import qualified Presenters.UniqueTask as PU
+import qualified Presenters.RecurringTask as PR
 
-    let rts = [ RecurringTask 1 "Cooking" True True 1
-              , RecurringTask 2 "Running" False False 2
-              ]
+import           Responses.TaskList
+
+taskListResponse ::Connection -> IO TaskListResponse
+taskListResponse conn = do
+    uModels <- query_ conn "select * from unique_tasks"
+    let uPresenters = map PU.fromModel uModels
+
+    rModels <- query_ conn "select * from recurring_tasks"
+    let rPresenters = map PR.fromModel rModels
 
     return TaskListResponse
-        { uniqueTasks    = uts
-        , recurringTasks = rts
+        { uniqueTasks    = uPresenters
+        , recurringTasks = rPresenters
         }

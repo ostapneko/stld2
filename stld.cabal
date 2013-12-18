@@ -16,8 +16,10 @@ executable stld
   main-is:             Main.hs
   ghc-options:         -Wall
   build-depends:       base >=4.6 && <4.7,
-                       aeson,
+                       aeson ==0.6.2.1,
+                       bytestring,
                        mtl,
+                       postgresql-simple ==0.3.10.0,
                        scotty ==0.6.0,
                        text
   hs-source-dirs:      src/main
