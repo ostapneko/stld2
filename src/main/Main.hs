@@ -6,6 +6,8 @@ import           Database.PostgreSQL.Simple
 
 import           Persistence.DBConnection
 
+import           Response
+
 import           Services.Task
 
 import           System.Environment
@@ -16,8 +18,17 @@ import           Web.Scotty
 main :: IO ()
 main = runApp $ \ conn -> do
     get "/tasks" $ do
-        resp <- liftIO (taskListResponse conn)
-        json resp
+        Response st payload <- liftIO (taskList conn)
+        setHeader "Content-Type" "application/json"
+        status st
+        text payload
+
+    post "/unique-task" $ do
+        body' <- body
+        Response st payload <- liftIO (createUniqueTask body' conn)
+        setHeader "Content-Type" "application/json"
+        status st
+        text payload
 
 runApp :: (Connection -> ScottyM ()) -> IO ()
 runApp action = do

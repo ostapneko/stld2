@@ -1,22 +1,21 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Responses.TaskList
-    ( TaskListResponse(..)
+module Presenters.TaskList
+    ( TaskList(..)
     ) where
 
 import           Data.Aeson
-import qualified Data.Text  as T
 
 import           Presenters.UniqueTask
 import           Presenters.RecurringTask
 
-data TaskListResponse = TaskListResponse
+data TaskList = TaskList
     { uniqueTasks    :: [UniqueTask]
     , recurringTasks :: [RecurringTask]
     }
 
-instance ToJSON TaskListResponse where
-    toJSON (TaskListResponse ut rt) =
+instance ToJSON TaskList where
+    toJSON (TaskList ut rt) =
         object [ "uniqueTasks"    .= ut
                , "recurringTasks" .= rt
                ]

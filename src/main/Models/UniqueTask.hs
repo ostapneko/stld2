@@ -2,7 +2,7 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 
 module Models.UniqueTask
-    ( UniqueTaskStatus(..)
+    ( Status(..)
     , UniqueTask(..)
     ) where
 
@@ -13,15 +13,16 @@ import           Data.Typeable
 import qualified Data.Text as T
 
 import           Database.PostgreSQL.Simple.FromField
+import           Database.PostgreSQL.Simple.ToField
 import           Database.PostgreSQL.Simple.FromRow
 
-data UniqueTaskStatus
+data Status
     = Todo
     | Done
     | NotStarted
     deriving (Show, Eq, Typeable)
 
-instance FromField UniqueTaskStatus where
+instance FromField Status where
     fromField f mdata = do
         text <- fromField f mdata :: Conversion T.Text
         case text of
@@ -32,10 +33,15 @@ instance FromField UniqueTaskStatus where
                 let err = "Valid values are todo, done and not_started"
                 returnError ConversionFailed f err
 
+instance ToField Status where
+    toField Todo       = toField ("todo" :: T.Text)
+    toField Done       = toField ("done" :: T.Text)
+    toField NotStarted = toField ("not_started" :: T.Text)
+
 data UniqueTask = UniqueTask
     { taskId      :: Int
     , description :: T.Text
-    , status      :: UniqueTaskStatus
+    , status      :: Status
     }
 
 instance FromRow UniqueTask where
