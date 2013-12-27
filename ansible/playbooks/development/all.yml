@@ -13,7 +13,7 @@
 
   - name: Link database config file
     file: dest=/home/${stld_user}/apps/stld/current/config/database.json
-          src=/home/${stld_user}/apps/stld/workspace/config/database.development.json
+          src=/home/${stld_user}/apps/stld/workspace/config/database.sample.json
           state=link
 
   - name: Install Coffeescript
