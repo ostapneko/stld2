@@ -21,7 +21,7 @@ executable stld
                        http-types ==0.8.2,
                        mtl,
                        postgresql-simple ==0.3.10.0,
-                       scotty ==0.6.0,
+                       scotty ==0.6.2,
                        text,
                        unordered-containers ==0.2.3.3
   hs-source-dirs:      src/main
