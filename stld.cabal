@@ -20,7 +20,7 @@ executable stld
                        bytestring,
                        http-types ==0.8.2,
                        mtl,
-                       postgresql-simple ==0.3.10.0,
+                       postgresql-simple ==0.4.0.1,
                        scotty ==0.6.2,
                        text,
                        unordered-containers ==0.2.3.3

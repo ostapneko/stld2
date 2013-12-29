@@ -3,6 +3,7 @@
 module Services.Task
     ( taskList
     , createUniqueTask
+    , deleteUniqueTask
     ) where
 
 import           Data.Aeson
@@ -45,6 +46,12 @@ createUniqueTask conn payload = do
     case mInfo of
         Nothing -> return $ Response badRequest400 "Unparseable payload"
         Just (desc, status) -> createUniqueTaskInDB conn desc status
+
+deleteUniqueTask :: Connection -> Int -> IO Response
+deleteUniqueTask conn taskId = do
+    let sql = "delete from unique_tasks where id = ?"
+    _ <- execute conn sql [taskId]
+    return $ Response ok200 ""
 
 parseNewTaskInfo :: BSL.ByteString -> Maybe (T.Text, MU.Status)
 parseNewTaskInfo payload = do

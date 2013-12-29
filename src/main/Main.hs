@@ -26,6 +26,11 @@ main = runApp $ \ conn -> do
         res   <- liftIO (createUniqueTask conn body')
         respond res
 
+    delete "/unique-task/:taskId" $ do
+        taskId <- param "taskId"
+        res    <- liftIO (deleteUniqueTask conn taskId)
+        respond res
+
 runApp :: (Connection -> ScottyM ()) -> IO ()
 runApp action = do
     args <- getArgs
