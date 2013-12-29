@@ -1,6 +1,6 @@
 {
     "host":     "localhost",
-    "dbname":   "stld",
+    "dbname":   "stld_development",
     "user":     "stld",
     "password": "stld",
     "port":     5432

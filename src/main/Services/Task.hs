@@ -39,8 +39,8 @@ taskList conn = do
            }
     return $ Response status200 (decodeUtf8 $ encode tl)
 
-createUniqueTask :: BSL.ByteString -> Connection -> IO Response
-createUniqueTask payload conn = do
+createUniqueTask :: Connection -> BSL.ByteString -> IO Response
+createUniqueTask conn payload = do
     let mInfo = parseNewTaskInfo payload
     case mInfo of
         Nothing -> return $ Response badRequest400 "Unparseable payload"

@@ -18,17 +18,13 @@ import           Web.Scotty
 main :: IO ()
 main = runApp $ \ conn -> do
     get "/tasks" $ do
-        Response st payload <- liftIO (taskList conn)
-        setHeader "Content-Type" "application/json"
-        status st
-        text payload
+        res <- liftIO (taskList conn)
+        respond res
 
     post "/unique-task" $ do
         body' <- body
-        Response st payload <- liftIO (createUniqueTask body' conn)
-        setHeader "Content-Type" "application/json"
-        status st
-        text payload
+        res   <- liftIO (createUniqueTask conn body')
+        respond res
 
 runApp :: (Connection -> ScottyM ()) -> IO ()
 runApp action = do
@@ -48,3 +44,9 @@ usage :: IO ()
 usage = do
     putStrLn "Usage: stld DATABASE_CONFIG_FILE"
     exitFailure
+
+respond :: Response -> ActionM ()
+respond (Response st payload) = do
+    setHeader "Content-Type" "application/json"
+    status st
+    text payload
