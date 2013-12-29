@@ -6,12 +6,16 @@ module Services.Task
     , deleteUniqueTask
     ) where
 
+import           Control.Exception
+
 import           Data.Aeson
 import           Data.Monoid
 import           Data.Text.Lazy.Encoding
+import qualified Data.ByteString.Char8      as BS
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import qualified Data.HashMap.Strict        as HM
 import qualified Data.Text                  as T
+import qualified Data.Text.Lazy             as TL
 
 import           Database.PostgreSQL.Simple
 
@@ -45,7 +49,7 @@ createUniqueTask conn payload = do
     let mInfo = parseNewTaskInfo payload
     case mInfo of
         Nothing -> return $ Response badRequest400 "Unparseable payload"
-        Just (desc, status) -> createUniqueTaskInDB conn desc status
+        Just (desc, status) -> tryQuery $ createUniqueTaskInDB conn desc status
 
 deleteUniqueTask :: Connection -> Int -> IO Response
 deleteUniqueTask conn taskId = do
@@ -71,3 +75,15 @@ createUniqueTaskInDB conn d s = do
     let presenter = PU.fromModel model
     let obj       = object [ "task" .= presenter ]
     return $ Response created201 (decodeUtf8 $ encode obj)
+
+-- | run a query and return a bad request error if their is an error
+tryQuery :: IO Response -> IO Response
+tryQuery action =
+    catch action
+          (\ e -> do let msg    = bslToText $ sqlErrorMsg e
+                     let detail = bslToText $ sqlErrorDetail e
+                     let fullMsg = msg <> "\n" <> detail
+                     return (Response badRequest400 fullMsg))
+
+bslToText :: BS.ByteString -> TL.Text
+bslToText = decodeUtf8 . BSL.fromChunks . (: [])
