@@ -1,45 +1,27 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell   #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Persistence.DBConnection
-    ( DBConnection
-    , toConnectionString
-    , loadConnectionString
+    ( loadConnection
     ) where
 
+import           Control.Applicative
+import           Control.Monad
+
 import           Data.Aeson
-import           Data.Aeson.TH
+
 import qualified Data.ByteString.Lazy.Char8 as BSL
 
-import           Data.Monoid
-import qualified Data.ByteString.Char8 as BS
+import           Database.PostgreSQL.Simple
 
+instance FromJSON ConnectInfo where
+    parseJSON (Object v) = ConnectInfo
+                       <$> v .: "host"
+                       <*> v .: "port"
+                       <*> v .: "user"
+                       <*> v .: "password"
+                       <*> v .: "dbname"
+    parseJSON _          = mzero
 
-data DBConnection = DBConnection
-                  { host     :: BS.ByteString
-                  , dbname   :: BS.ByteString
-                  , user     :: BS.ByteString
-                  , password :: BS.ByteString
-                  , port     :: Int
-                  } deriving Show
-
-$(deriveJSON defaultOptions ''DBConnection)
-
--- | Create a connection string with the format
---
--- > "host=localhost dbname=dbname ..."
-toConnectionString :: DBConnection -> BS.ByteString
-toConnectionString conn
-    =  "host="      <> host conn
-    <> " dbname="   <> dbname conn
-    <> " user="     <> user conn
-    <> " password=" <> password conn
-    <> " port="     <> (BS.pack . show $ port conn)
-
-loadConnectionString :: String -> IO (Either String BS.ByteString)
-loadConnectionString file = do
-    content <- BSL.readFile file
-    let eConnString = eitherDecode content
-    return $ case eConnString of
-      Left err   -> Left err
-      Right conn -> Right $ toConnectionString conn
+loadConnection :: String -> IO (Either String ConnectInfo)
+loadConnection file = eitherDecode <$> BSL.readFile file
