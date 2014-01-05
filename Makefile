@@ -22,6 +22,7 @@ front_end: $(BOOTSTRAP_CSS) $(ANGULAR) font_awesome scripts
 
 back_end:
 	cabal sandbox init
+	cabal install --only-dependencies
 	cabal install --bindir=bin
 
 $(BOOTSTRAP_CSS): | $(STYLES_VENDOR_DIR)
