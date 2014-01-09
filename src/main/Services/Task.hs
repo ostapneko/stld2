@@ -9,7 +9,7 @@ module Services.Task
 import           Control.Exception
 
 import           Data.Aeson
-import           Data.Monoid
+import           Data.Monoid ( (<>) )
 import           Data.Text.Lazy.Encoding
 import qualified Data.ByteString.Char8      as BS
 import qualified Data.ByteString.Lazy.Char8 as BSL
@@ -23,6 +23,8 @@ import qualified Models.UniqueTask as MU
 
 import           Network.HTTP.Types.Status
 
+import           Persistence.Queries
+
 import qualified Presenters.UniqueTask    as PU
 import qualified Presenters.TaskList      as PL
 import qualified Presenters.RecurringTask as PR
@@ -32,10 +34,10 @@ import           Response
 
 taskList :: Connection -> IO Response
 taskList conn = do
-    uModels <- query_ conn "select * from unique_tasks"
+    uModels <- getAll conn
     let uPresenters = map PU.fromModel uModels
 
-    rModels <- query_ conn "select * from recurring_tasks"
+    rModels <- getAll conn
     let rPresenters = map PR.fromModel rModels
 
     let tl = PL.TaskList
