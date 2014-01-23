@@ -1,4 +1,4 @@
 stld2
 =====
 
-New version of STLD, powered by Haskell and Angular
+New version of STLD, powered by Haskell and Angular. Pretty much abandonned.
